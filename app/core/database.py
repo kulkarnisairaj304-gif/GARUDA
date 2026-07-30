@@ -19,10 +19,14 @@ Sentinel AI XDR
 """
 
 from sqlalchemy import create_engine
-from sqlalchemy.orm import DeclarativeBase, sessionmaker
+from sqlalchemy.orm import sessionmaker
 
 from app.core.config import settings
 from app.core.logger import logger
+from app.models.base import Base
+
+# Import models so SQLAlchemy knows they exist
+from app.models.user import User
 
 
 # --------------------------------------------------
@@ -50,12 +54,26 @@ SessionLocal = sessionmaker(
 # --------------------------------------------------
 # Base Model
 # --------------------------------------------------
-
-class Base(DeclarativeBase):
-    """
-    Base class for all SQLAlchemy models.
-    """
-    pass
-
-
 logger.info("Database configuration initialized.")
+
+
+def create_tables() -> None:
+    """
+    Create all database tables.
+    """
+
+    logger.info("Creating database tables...")
+
+    Base.metadata.create_all(bind=engine)
+
+    logger.info("Database tables created successfully.")
+
+def get_db():
+    """
+    Dependency that provides a database session.
+    """
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()    

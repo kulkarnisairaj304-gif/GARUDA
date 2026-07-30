@@ -25,17 +25,24 @@ from fastapi import FastAPI
 
 from app.core.config import settings
 from app.core.logger import logger
+from app.core.database import create_tables
+from app.services.database_service import test_database_connection
+from app.api.auth_router import router as auth_router
+
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """
-    Runs when the application starts and stops.
-    """
 
     logger.info("======================================")
     logger.info(f"Starting {settings.app_name}")
     logger.info(f"Version: {settings.app_version}")
+
+    if not test_database_connection():
+        raise RuntimeError("Unable to connect to PostgreSQL.")
+
+    create_tables()
+
     logger.info("Backend initialized successfully.")
     logger.info("======================================")
 
@@ -52,7 +59,7 @@ app = FastAPI(
     debug=settings.debug,
     lifespan=lifespan,
 )
-
+app.include_router(auth_router)
 # --------------------------------------------------
 # Root Endpoint
 # --------------------------------------------------
