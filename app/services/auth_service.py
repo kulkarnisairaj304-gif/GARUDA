@@ -79,8 +79,6 @@ class AuthService:
             )
 
         print("Stored Email:", user.email)
-        print("Entered Password:", password)
-        print("Stored Hash:", user.password_hash)
 
         password_match = verify_password(
             password,

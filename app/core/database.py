@@ -27,7 +27,10 @@ from app.models.base import Base
 
 # Import models so SQLAlchemy knows they exist
 from app.models.user import User
-
+from app.models.project import Project
+from app.models.application import Application
+from app.models.scan import Scan
+from app.models.phishing_analysis import PhishingAnalysis
 
 # --------------------------------------------------
 # Database Engine

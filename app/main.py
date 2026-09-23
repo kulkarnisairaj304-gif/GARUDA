@@ -22,14 +22,16 @@ Sentinel AI XDR
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
-
+from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.core.logger import logger
 from app.core.database import create_tables
 from app.services.database_service import test_database_connection
 from app.api.auth_router import router as auth_router
-
-
+from app.api.project_router import router as project_router
+from app.api.scan_router import router as scan_router
+from app.api.application_router import router as application_router
+from app.api.phishing_router import router as phishing_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -60,6 +62,20 @@ app = FastAPI(
     lifespan=lifespan,
 )
 app.include_router(auth_router)
+app.include_router(project_router)
+app.include_router(application_router)
+app.include_router(scan_router)
+app.include_router(phishing_router)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 # --------------------------------------------------
 # Root Endpoint
 # --------------------------------------------------

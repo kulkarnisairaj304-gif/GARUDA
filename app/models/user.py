@@ -8,7 +8,7 @@ of Sentinel AI XDR.
 from datetime import datetime
 
 from sqlalchemy import Boolean, DateTime, Integer, String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base
 
@@ -51,4 +51,9 @@ class User(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime,
         default=datetime.utcnow
+    )
+    projects = relationship(
+        "Project",
+        back_populates="owner",
+        cascade="all, delete-orphan",
     )
