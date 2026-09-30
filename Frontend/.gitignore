@@ -1,0 +1,6 @@
+# Frontend
+Frontend/node_modules/
+Frontend/dist/
+Frontend/.env
+Frontend/.env.local
+Frontend/.env.*.local
